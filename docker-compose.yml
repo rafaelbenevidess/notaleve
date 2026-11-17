@@ -1,0 +1,36 @@
+# Ambiente local completo do NotaLeve em Docker (sem transações reais).
+#   1) npx supabase start      (banco/auth — a CLI do Supabase também roda em containers)
+#   2) docker compose up -d --build
+#   App: http://localhost:3000   ·   ou tudo de uma vez:  npm run docker
+name: notaleve
+
+include:
+  - infra/receita/docker-compose.yml   # calculadoras da Receita (8080, 8082) + DANFSe (8081)
+
+services:
+  sefaz-mock:
+    build: { context: ., target: sefaz-mock }
+    image: notaleve/sefaz-mock:local
+    ports: ["8090:8090"]
+    restart: unless-stopped
+
+  app:
+    build: { context: ., target: app }
+    image: notaleve/app:local
+    ports: ["3000:3000"]
+    restart: unless-stopped
+    extra_hosts: ["host.docker.internal:host-gateway"]   # Supabase local (CLI) roda no host
+    depends_on: [sefaz-mock, calc-regime-geral, calc-simples-nacional]
+    environment:
+      NEXT_PUBLIC_SUPABASE_URL: http://host.docker.internal:54321
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0
+      SUPABASE_SERVICE_ROLE_KEY: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU
+      RF_API_URL: http://calc-regime-geral:8080/api
+      RF_SN_API_URL: http://calc-simples-nacional:8082/api
+      SEFAZ_MODO: mock
+      SEFAZ_MOCK_URL: http://sefaz-mock:8090
+      # Chave de teste fixa para o ambiente local (troque em qualquer outro uso)
+      NOTALEVE_MASTER_KEY: ${NOTALEVE_MASTER_KEY:-bm90YWxldmUtY2hhdmUtbG9jYWwtZGUtdGVzdGUtMzI=}
+      ASAAS_WEBHOOK_TOKEN: troque-este-token-local
+      APP_URL: http://localhost:3000
+      RESP_TEC_CNPJ: "00000000000191"

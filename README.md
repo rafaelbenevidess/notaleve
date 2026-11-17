@@ -23,9 +23,9 @@ Os cálculos usam as **calculadoras oficiais de código aberto da Receita Federa
 - **NFC-e:** XML 4.00 com o grupo IBSCBS **gerado pela calculadora oficial**, validado no **XSD oficial**, assinado (XMLDSig), QR Code v2, autorização, cancelamento, inutilização e DANFE 80 mm em PDF.
 - **Painel e contador:** faturamento, tributos do mês nos dois modos, mais vendidos, exportação mensal dos XMLs (zip).
 
-## Rodar localmente
+## Rodar localmente (tudo em Docker)
 
-Pré-requisitos: Node 22+, Docker com Compose v2 e Git.
+Pré-requisitos: **Docker** (com Compose v2), **Node 22+** (para a CLI do Supabase e os scripts) e **Git**. Nada aqui faz transação real: a SEFAZ é simulada (sem valor fiscal) e o Asaas roda em modo simulado (sem cobrança).
 
 ```bash
 git clone --recurse-submodules https://github.com/rafaelbenevidess/notaleve.git
@@ -36,23 +36,44 @@ cd notaleve && npm install
 ```
 
 ```bash
-npm run local
+npm run docker
 ```
 
-O `npm run local` sobe as calculadoras da Receita, o Supabase local, a SEFAZ simulada e o app em http://localhost:3000. Para testar a emissão, gere um certificado A1 de teste com o CNPJ da sua loja de teste e envie em **Configurações** (a senha é o 2º argumento; qualquer CSC serve na SEFAZ simulada):
+Na primeira vez o build demora alguns minutos (compila as calculadoras Java da Receita). Depois abra http://localhost:3000.
+
+| Container | Porta | O que é |
+|---|---|---|
+| `app` | 3000 | NotaLeve (Next.js) |
+| `sefaz-mock` | 8090 | SEFAZ simulada: valida assinatura e chave; notas sem valor fiscal |
+| `calc-regime-geral` | 8080 | Calculadora oficial da Receita (Swagger em `/api/swagger-ui.html`) |
+| `calc-simples-nacional` | 8082 | Calculadora oficial do Simples Nacional |
+| `danfse` | 8081 | Gerador de DANFSe da Receita |
+| Supabase (CLI) | 54321/54322 | Banco e login (containers gerenciados pela CLI do Supabase) |
+
+### Roteiro para testar as funções
+
+1. **Criar conta** em http://localhost:3000/cadastro (qualquer e-mail; não há confirmação no local).
+2. **Cadastrar a loja**: use um CNPJ válido, por exemplo `11.222.333/0001-81`, UF SP, município São Paulo, regime Simples Nacional.
+3. **Certificado de teste**: gere com o CNPJ da loja e envie em *Configurações* (senha `1234`). No CSC, qualquer valor serve (ex.: ID `1`, CSC `TESTE123`).
 
 ```bash
-npm run cert:teste -- 11222333000181 1234 certificado-teste.pfx
+npx tsx scripts/certificado-teste.ts 11222333000181 1234 certificado-teste.pfx
 ```
 
-| Serviço | URL |
-|---|---|
-| App NotaLeve | http://localhost:3000 |
-| Calculadora Regime Geral (Receita) | http://localhost:8080/api/swagger-ui.html |
-| Calculadora Simples Nacional (Receita) | http://localhost:8082/api/swagger-ui.html |
-| Gerador DANFSe (Receita) | http://localhost:8081/api/swagger-ui |
-| Supabase (API) | http://127.0.0.1:54321 |
-| SEFAZ simulada | http://localhost:8090 |
+4. **Produtos**: cadastre, por exemplo, *Camiseta* (NCM `61091000`) e *Calça jeans* (NCM `62034200`). A tela valida NCM e cClassTrib na tabela oficial.
+5. **Vender**: monte o carrinho, clique em *Ver impostos: hoje × 2033* e depois em *Finalizar e emitir NFC-e*.
+6. **Nota**: na venda, baixe o DANFE (PDF) e o XML e teste o *Cancelar NFC-e*.
+7. **Notas, Painel e Assinatura**: inutilização de numeração, exportação mensal dos XMLs, indicadores do mês e o pagamento simulado da assinatura.
+
+Para simular uma **rejeição** da SEFAZ, cadastre um produto com a palavra `REJEITAR` no nome e coloque-o como **2º item** do carrinho (em homologação, a descrição do 1º item é substituída pelo texto obrigatório). O QR Code do DANFE aponta para a SEFAZ simulada.
+
+```bash
+npm run docker:parar
+```
+
+### Modo desenvolvimento (sem container do app)
+
+`npm run local` sobe as dependências e roda o app com recarga automática (`next dev`).
 
 ## Testes
 

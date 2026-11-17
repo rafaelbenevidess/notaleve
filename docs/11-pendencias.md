@@ -18,3 +18,4 @@
 | P-14 | Conta Asaas (sandbox → produção), `ASAAS_API_KEY` e token do webhook | Comercial | Cobrança real |
 | P-15 | Script de rotação da `NOTALEVE_MASTER_KEY` (recifrar certificados e CSC) | Técnico | Antes de produção |
 | P-16 | ~~Cadeia ICP-Brasil~~ ✅ `infra/certs/icp-brasil.pem` (raízes v5/v10/v11/v12 do ITI), validada contra SEFAZ-SP e SVRS | Técnico | — |
+| P-17 | Decisão (2026-11-17): **manter o NotaLeve local, em Docker, para testes.** Homologação real só com certificado A1 (P-04); online só quando o dono decidir as contas (docs/12) | Dono | Lançamento |

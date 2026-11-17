@@ -101,6 +101,14 @@ Descrição de qualquer código:
 - **Causa:** na ordem padrão das diretivas do Caddy, `respond` roda depois de `handle_path`, então o bloqueio nunca era aplicado.
 - **Solução:** envolver as regras num bloco `route { … }`, que preserva a ordem escrita (`infra/producao/Caddyfile`). Testado: sem chave → 403; com chave → 200.
 
+### T-19 — Container do app: "EACCES: permission denied, mkdir '/app/.next/cache'"
+- **Causa:** os arquivos do build eram copiados como root, e o app roda com um usuário sem privilégios.
+- **Solução:** `COPY --chown=app:app` no `Dockerfile`.
+
+### T-20 — `docker compose up`: "failed to bind host port 0.0.0.0:3000: address already in use"
+- **Causa:** já há um `next dev`/`next start` (ou outro serviço) na porta 3000 ou 8090.
+- **Solução:** pare o processo (`npm run docker:parar` derruba os containers) ou troque a porta publicada no `docker-compose.yml`.
+
 ## Rejeições da SEFAZ tratadas
 
 | cStat | Significado | Onde aparece |

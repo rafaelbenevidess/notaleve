@@ -47,6 +47,10 @@ Legenda: ✅ concluído · 🔄 em andamento · ⏳ pendente · ⛔ bloqueado po
 - ✅ Faturamento, NFC-e, tributos do mês nos dois modos, mais vendidos
 - ✅ Exportação mensal (zip com XMLs + resumo.csv)
 
+## Ambiente de testes em Docker ✅ (decisão do dono: ficar local)
+- ✅ `npm run docker`: app + SEFAZ simulada + calculadoras em containers; Supabase pela CLI (também containers)
+- ✅ E2E desktop + celular passando contra o app em container
+
 ## Qualidade ✅
 - ✅ 17 testes unitários/integração (Vitest), teste SQL de RLS, E2E Playwright (desktop + celular)
 - ✅ `tsc`, `eslint` e `next build` sem erros
@@ -54,7 +58,7 @@ Legenda: ✅ concluído · 🔄 em andamento · ⏳ pendente · ⛔ bloqueado po
 ## Plano online ✅ (documento) · ⏳ (execução)
 - ✅ [12-plano-online.md](12-plano-online.md): topologia, custos, passo a passo, checklist de go-live, operação
 - ✅ `infra/producao/` (Compose + Caddy com chave interna, testado), `vercel.json` (gru1), CI e workflow de imagens multi-arch
-- ⏳ Executar: contas Vercel Pro, Supabase, Oracle, Asaas, domínio
+- ⏸ Execução adiada por decisão do dono (2026-11-17): o NotaLeve fica local, em Docker, para testes
 
 ## Fase 6 — Ponte nacional + API pública ⏳
 - Autorizadores de todas as UFs/SVRS/SVAN, contingência, monitor SEFAZ, monitor de novas NTs, API para terceiros

@@ -4,6 +4,16 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
 ## [Não lançado]
 
+## [0.2.0] — 2026-11-17 — Tudo em Docker
+
+### Adicionado
+- `Dockerfile` (alvos `app`, Next.js standalone, e `sefaz-mock`) e `docker-compose.yml` na raiz, que inclui as calculadoras da Receita.
+- `npm run docker` / `npm run docker:parar`, com um roteiro de testes no README.
+- E2E (desktop + celular) validado contra o app rodando em container.
+
+### Corrigido
+- T-19 (permissão do cache do Next no container) e T-20 (porta ocupada) documentados.
+
 ## [0.1.1] — 2026-11-17 — Validação externa e plano online
 
 ### Adicionado

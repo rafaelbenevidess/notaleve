@@ -1,0 +1,13 @@
+node_modules
+.next
+.git
+infra/receita/vendor
+infra/receita/out
+test-results
+playwright-report
+.env
+.env.local
+*.pfx
+*.p12
+supabase/.temp
+supabase/.branches

@@ -4,6 +4,8 @@ const nextConfig: NextConfig = {
   /* config options here */
   // Cache Components desligado: toda a área logada depende da sessão (ver docs/adr/0011).
   cacheComponents: false,
+  // Imagem Docker enxuta (Dockerfile na raiz)
+  output: 'standalone',
   turbopack: {
     rules: {
       "*.css": {

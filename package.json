@@ -15,7 +15,9 @@
     "cert:teste": "tsx scripts/certificado-teste.ts",
     "local": "bash scripts/subir-local.sh",
     "test:tudo": "vitest run && npm run test:rls && playwright test --trace off",
-    "db:tipos": "supabase gen types typescript --local > src/lib/supabase/database.types.ts"
+    "db:tipos": "supabase gen types typescript --local > src/lib/supabase/database.types.ts",
+    "docker": "bash scripts/docker.sh",
+    "docker:parar": "bash scripts/docker.sh parar"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",

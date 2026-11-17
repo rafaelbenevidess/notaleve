@@ -17,4 +17,4 @@
 | P-13 | Revisão jurídica do rascunho de termos/privacidade em `/termos` | Jurídico | Lançamento |
 | P-14 | Conta Asaas (sandbox → produção), `ASAAS_API_KEY` e token do webhook | Comercial | Cobrança real |
 | P-15 | Script de rotação da `NOTALEVE_MASTER_KEY` (recifrar certificados e CSC) | Técnico | Antes de produção |
-| P-16 | Baixar a cadeia ICP-Brasil (ITI) para `infra/certs/icp-brasil.pem` | Técnico | Homologação real |
+| P-16 | ~~Cadeia ICP-Brasil~~ ✅ `infra/certs/icp-brasil.pem` (raízes v5/v10/v11/v12 do ITI), validada contra SEFAZ-SP e SVRS | Técnico | — |

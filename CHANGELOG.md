@@ -12,6 +12,7 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 - Suporte à cadeia ICP-Brasil (`SEFAZ_CA_FILE`) no cliente SOAP.
 - `docs/12-plano-online.md`, `infra/producao/` (Compose + Caddy com chave interna), `vercel.json`, CI e workflow de imagens multi-arch.
 - Header `X-Internal-Key` (`RF_INTERNAL_KEY`) nas chamadas às calculadoras.
+- `infra/certs/icp-brasil.pem`: raízes ICP-Brasil do ITI, validadas contra as homologações de SEFAZ-SP e SVRS.
 
 ### Corrigido
 - T-18: o Caddyfile não bloqueava pedidos sem chave (corrigido com `route` e testado).

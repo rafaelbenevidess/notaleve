@@ -13,7 +13,9 @@ Legenda: ✅ concluído · 🔄 em andamento · ⏳ pendente · ⛔ bloqueado po
 - ✅ Rede liberada (ambiente "notaleve"): piloto da Receita, Portal NF-e, homologação SP/SVRS
 - ✅ Cadeia TLS das SEFAZ diagnosticada (ICP-Brasil, T-16) e suportada (`SEFAZ_CA_FILE`)
 - ✅ `scripts/validar-homologacao.mts`: status → emissão → cancelamento numa SEFAZ real, em um comando
-- ⛔ Executar a homologação: **falta certificado A1** de um CNPJ real (P-04) e a cadeia ICP-Brasil (P-16)
+- ✅ Cadeia ICP-Brasil versionada (`infra/certs/icp-brasil.pem`): TLS validado com SEFAZ-SP e SVRS homologação
+- ⛔ Caminhos dos webservices (`conferido: false`): sem certificado de cliente, as SEFAZ respondem 403 para qualquer caminho, inclusive inexistentes, então só se confirmam com A1
+- ⛔ Executar a homologação: **falta certificado A1** de um CNPJ real com IE habilitada e CSC (P-04)
 
 ## Fase 1 — Base do SaaS ✅
 - ✅ Next.js 16 + TypeScript + Tailwind 4

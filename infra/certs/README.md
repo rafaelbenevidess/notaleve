@@ -1,0 +1,17 @@
+# Cadeia ICP-Brasil (raízes) para falar com as SEFAZ
+
+`icp-brasil.pem` contém as raízes oficiais da ICP-Brasil, baixadas em 2026-11-17 de
+`https://acraiz.icpbrasil.gov.br/credenciadas/RAIZ/` (ITI). São certificados públicos de CA.
+
+| Raiz | Válida até | SHA-256 |
+|---|---|---|
+| AC Raiz Brasileira v5 | 2029-03-02 | CA:A5:3F:C6:09:1C:69:51:88:7C:97:6E:37:8F:6E:F8:9A:A6:37:7C:55:D9:7B:64:75:42:2B:71:ED:7E:9B:17 |
+| AC Raiz Brasileira v10 | 2032-07-01 | 6E:0B:FF:06:9A:26:99:4C:15:DE:2C:48:88:CC:54:AF:84:88:2E:54:95:B7:FB:F6:6B:E9:CC:FF:EC:74:89:F6 |
+| AC Raiz Brasileira v11 | 2032-07-01 | 14:06:71:00:58:18:0F:A4:08:1A:AB:3F:24:6F:17:02:42:9C:55:2A:11:FA:31:43:B8:4C:88:CB:3A:B8:E5:E7 |
+| AC Raiz Brasileira v12 | 2037-10-22 | D8:47:8E:37:CE:19:C6:90:CF:65:73:81:E6:8F:E6:00:E4:E1:A0:42:53:68:30:F0:68:47:E0:3E:55:4C:4B:01 |
+
+Verificado em 2026-11-17: valida os servidores de homologação de NFC-e da SEFAZ-SP e da SVRS
+(`openssl s_client -CAfile icp-brasil.pem` → `Verify return code: 0 (ok)`).
+
+Uso: `SEFAZ_CA_FILE=infra/certs/icp-brasil.pem` (ver docs/09-troubleshooting.md, T-16).
+Confira as impressões digitais no site do ITI ao atualizar o arquivo.

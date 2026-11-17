@@ -90,7 +90,8 @@ Descrição de qualquer código:
 
 ### T-16 — SEFAZ real: "unable to get local issuer certificate"
 - **Causa:** os webservices das SEFAZ usam certificados da cadeia **ICP-Brasil** (ex.: SEFAZ-SP: *AC SOLUTI SSL EV G4* → *AC Raiz Brasileira v10*), que não estão no repositório padrão de CAs do sistema nem do Node.
-- **Solução:** baixar a cadeia ICP-Brasil do ITI, salvar como PEM e apontar `SEFAZ_CA_FILE` para ela. `src/lib/fiscal/sefaz.ts` soma essas CAs às padrão.
+- **Solução:** `SEFAZ_CA_FILE=infra/certs/icp-brasil.pem` (raízes oficiais do ITI, já versionadas). `src/lib/fiscal/sefaz.ts` soma essas CAs às padrão.
+- **Nota:** sem certificado de cliente (A1), as SEFAZ respondem **403 para qualquer caminho**. Um 403 não confirma a URL; só a emissão com A1 confirma.
 
 ### T-17 — `fetch` do Node: "getaddrinfo ENOTFOUND" dentro da sessão de desenvolvimento em nuvem
 - **Causa:** o `fetch` do Node ignora `HTTPS_PROXY` por padrão.

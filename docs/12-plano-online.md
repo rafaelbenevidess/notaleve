@@ -101,7 +101,7 @@ npx supabase db push
 3. Testar primeiro no **sandbox** (`https://api-sandbox.asaas.com/v3`) com as mesmas variáveis.
 
 ### 3.5 SEFAZ (por UF)
-1. Baixar a cadeia ICP-Brasil (AC Raiz v10 e intermediárias) do repositório do ITI e versionar em `infra/certs/icp-brasil.pem` (certificados de CA são públicos).
+1. A cadeia ICP-Brasil já está em `infra/certs/icp-brasil.pem` (raízes v5/v10/v11/v12 do ITI, validadas contra SP e SVRS). Ao atualizá-la, confira as impressões digitais em `infra/certs/README.md`.
 2. Conferir as URLs em `src/lib/fiscal/webservices.ts` contra a relação do Portal Nacional da NF-e.
 3. Com o A1 e o CSC de **homologação** de um CNPJ real:
 

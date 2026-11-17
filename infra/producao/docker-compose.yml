@@ -1,0 +1,36 @@
+# Produção das calculadoras da Receita (VM Oracle Cloud Always Free — São Paulo, ARM).
+# Imagens multi-arch publicadas pelo workflow .github/workflows/imagens.yml no GHCR.
+#   cd infra/producao && cp .env.exemplo .env && docker compose up -d
+name: notaleve-producao
+
+services:
+  calc-regime-geral:
+    image: ghcr.io/rafaelbenevidess/notaleve-calc-regime-geral:${TAG:-1.6.1}
+    restart: unless-stopped
+    mem_limit: 1536m
+    environment:
+      JAVA_OPTS: "-XX:MaxRAMPercentage=75 -XX:+UseSerialGC -Dspring.profiles.active=offline"
+    expose: ["8080"]
+
+  calc-simples-nacional:
+    image: ghcr.io/rafaelbenevidess/notaleve-calc-simples-nacional:${TAG_SN:-0.0.6}
+    restart: unless-stopped
+    mem_limit: 1536m
+    environment:
+      JAVA_OPTS: "-XX:MaxRAMPercentage=75 -XX:+UseSerialGC -Dspring.profiles.active=offline"
+    expose: ["8082"]
+
+  caddy:
+    image: caddy:2.10
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    environment:
+      DOMINIO: ${DOMINIO}
+      RF_INTERNAL_KEY: ${RF_INTERNAL_KEY}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+    depends_on: [calc-regime-geral, calc-simples-nacional]
+
+volumes:
+  caddy_data:

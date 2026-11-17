@@ -3,6 +3,7 @@
 // Devolve o XML de <IBSCBS> por item e o <IBSCBSTot>, prontos para embutir na NFC-e.
 
 const RG = () => process.env.RF_API_URL ?? 'http://localhost:8080/api'
+const cab = (): Record<string, string> => ({ 'Content-Type': 'application/json', ...(process.env.RF_INTERNAL_KEY ? { 'X-Internal-Key': process.env.RF_INTERNAL_KEY } : {}) })
 
 export interface ItemIbsCbs { numero: number; ncm: string; cst: string; cClassTrib: string; base: number; quantidade: number; unidade: string }
 
@@ -14,13 +15,13 @@ export async function gerarGruposIbsCbs(p: { uf: string; municipioIbge: number; 
     id: crypto.randomUUID().replace(/-/g, ''), versao: '1.0.0', dhFatoGerador: dh, municipio: p.municipioIbge, uf: p.uf,
     itens: p.itens.map((i) => ({ numero: i.numero, ncm: i.ncm, cst: i.cst, cClassTrib: i.cClassTrib, baseCalculo: Math.round(i.base * 100) / 100, quantidade: i.quantidade, unidade: i.unidade })),
   }
-  const calc = await fetch(`${RG()}/calculadora/regime-geral`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(req), cache: 'no-store' })
+  const calc = await fetch(`${RG()}/calculadora/regime-geral`, { method: 'POST', headers: cab(), body: JSON.stringify(req), cache: 'no-store' })
   const calculo = await calc.json()
   if (!calc.ok) {
     const det = (calculo as { errors?: Array<{ code: string; detail: string }> }).errors?.map((e) => `${e.code}: ${e.detail}`).join('; ')
     throw new Error(`A calculadora da Receita recusou os itens (IBS/CBS): ${det ?? calc.status}`)
   }
-  const gen = await fetch(`${RG()}/calculadora/xml/generate?tipo=nfce`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(calculo), cache: 'no-store' })
+  const gen = await fetch(`${RG()}/calculadora/xml/generate?tipo=nfce`, { method: 'POST', headers: cab(), body: JSON.stringify(calculo), cache: 'no-store' })
   if (!gen.ok) throw new Error(`Falha ao gerar o grupo IBSCBS na calculadora da Receita (HTTP ${gen.status})`)
   const xml = (await gen.text()).replace(/>\s+</g, '><')
   const porItem = new Map<number, string>()

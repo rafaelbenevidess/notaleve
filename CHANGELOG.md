@@ -4,6 +4,18 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
 ## [Não lançado]
 
+## [0.1.1] — 2026-11-17 — Validação externa e plano online
+
+### Adicionado
+- `scripts/comparar-piloto.mts`: calculadoras locais × instância oficial da Receita, com resultado idêntico. O piloto está na 1.7.0/V0073; o Simples Nacional não existe no piloto.
+- `scripts/validar-homologacao.mts`: status → emissão → cancelamento numa SEFAZ real (homologação).
+- Suporte à cadeia ICP-Brasil (`SEFAZ_CA_FILE`) no cliente SOAP.
+- `docs/12-plano-online.md`, `infra/producao/` (Compose + Caddy com chave interna), `vercel.json`, CI e workflow de imagens multi-arch.
+- Header `X-Internal-Key` (`RF_INTERNAL_KEY`) nas chamadas às calculadoras.
+
+### Corrigido
+- T-18: o Caddyfile não bloqueava pedidos sem chave (corrigido com `route` e testado).
+
 ## [0.1.0] — 2026-11-17 — MVP local
 
 ### Adicionado

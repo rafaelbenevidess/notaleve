@@ -6,6 +6,9 @@ const SN = () => process.env.RF_SN_API_URL ?? 'http://localhost:8082/api'
 
 export class ReceitaIndisponivel extends Error {}
 
+/** Em produção as calculadoras ficam atrás do Caddy, que exige este header (docs/12-plano-online.md). */
+export const cabecalhoInterno = (): Record<string, string> => (process.env.RF_INTERNAL_KEY ? { 'X-Internal-Key': process.env.RF_INTERNAL_KEY } : {})
+
 async function chamar<T>(url: string, init?: RequestInit & { revalidate?: number }): Promise<{ status: number; body: T; headers: Headers }> {
   const ctrl = new AbortController()
   const t = setTimeout(() => ctrl.abort(), 15_000)
@@ -13,7 +16,7 @@ async function chamar<T>(url: string, init?: RequestInit & { revalidate?: number
     const res = await fetch(url, {
       ...init,
       signal: ctrl.signal,
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json', ...(init?.headers ?? {}) },
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json', ...cabecalhoInterno(), ...(init?.headers ?? {}) },
       ...(init?.revalidate ? { next: { revalidate: init.revalidate } } : { cache: 'no-store' }),
     })
     const text = await res.text()

@@ -88,6 +88,18 @@ Descrição de qualquer código:
 - **Causas comuns:** certificado ou CSC não cadastrados; certificado vencido; calculadora da Receita fora do ar (regime normal precisa do grupo IBSCBS oficial); SEFAZ indisponível.
 - **Solução:** corrigir a causa indicada e clicar em **Emitir NFC-e** na página da venda. Notas sem resposta ficam com status `enviada` para conciliação.
 
+### T-16 — SEFAZ real: "unable to get local issuer certificate"
+- **Causa:** os webservices das SEFAZ usam certificados da cadeia **ICP-Brasil** (ex.: SEFAZ-SP: *AC SOLUTI SSL EV G4* → *AC Raiz Brasileira v10*), que não estão no repositório padrão de CAs do sistema nem do Node.
+- **Solução:** baixar a cadeia ICP-Brasil do ITI, salvar como PEM e apontar `SEFAZ_CA_FILE` para ela. `src/lib/fiscal/sefaz.ts` soma essas CAs às padrão.
+
+### T-17 — `fetch` do Node: "getaddrinfo ENOTFOUND" dentro da sessão de desenvolvimento em nuvem
+- **Causa:** o `fetch` do Node ignora `HTTPS_PROXY` por padrão.
+- **Solução:** rodar com `NODE_USE_ENV_PROXY=1` (ex.: `scripts/comparar-piloto.mts`). Conexões mTLS com a SEFAZ **não funcionam** através do proxy da sessão, que intercepta o TLS. A validação de homologação deve rodar na máquina do desenvolvedor ou no servidor de produção.
+
+### T-18 — Caddy não bloqueava pedidos sem `X-Internal-Key`
+- **Causa:** na ordem padrão das diretivas do Caddy, `respond` roda depois de `handle_path`, então o bloqueio nunca era aplicado.
+- **Solução:** envolver as regras num bloco `route { … }`, que preserva a ordem escrita (`infra/producao/Caddyfile`). Testado: sem chave → 403; com chave → 200.
+
 ## Rejeições da SEFAZ tratadas
 
 | cStat | Significado | Onde aparece |

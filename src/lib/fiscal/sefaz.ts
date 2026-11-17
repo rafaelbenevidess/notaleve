@@ -1,10 +1,23 @@
 // Comunicação SOAP 1.2 com a SEFAZ (mTLS com o certificado A1 do emitente).
 import https from 'node:https'
 import http from 'node:http'
+import tls from 'node:tls'
+import { readFileSync } from 'node:fs'
 import type { CertificadoA1 } from './certificado'
 import { NS } from './nfce/xml'
 
 const WSDL = 'http://www.portalfiscal.inf.br/nfe/wsdl'
+
+// Os webservices das SEFAZ usam certificados da cadeia ICP-Brasil (ex.: AC Raiz Brasileira v10),
+// ausente do repositório padrão de CAs. Em modo real, SEFAZ_CA_FILE aponta para um PEM com as
+// raízes/intermediárias ICP-Brasil (publicadas pelo ITI). Ver docs/09-troubleshooting.md (T-16).
+let casCache: string[] | undefined
+function casConfiaveis(): string[] | undefined {
+  const arquivo = process.env.SEFAZ_CA_FILE
+  if (!arquivo) return undefined
+  casCache ??= [...tls.rootCertificates, readFileSync(arquivo, 'utf8')]
+  return casCache
+}
 
 function envelope(servico: string, corpo: string) {
   return (
@@ -26,6 +39,7 @@ export async function postSoap(url: string, servico: string, corpo: string, cert
     headers: { 'Content-Type': `application/soap+xml; charset=utf-8; action="${WSDL}/${servico}/nfeAutorizacaoLote"`, 'Content-Length': Buffer.byteLength(body) },
     timeout: timeoutMs,
     ...(isHttps && cert ? { key: cert.chavePrivadaPem, cert: cert.certificadoPem } : {}),
+    ...(isHttps && casConfiaveis() ? { ca: casConfiaveis() } : {}),
   }
   return new Promise((resolve, reject) => {
     const req = (isHttps ? https : http).request(opts, (res) => {

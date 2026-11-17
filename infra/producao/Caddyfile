@@ -1,0 +1,22 @@
+# HTTPS automático (Let's Encrypt) + bloqueio de quem não tem a chave interna.
+# Só o app NotaLeve (Vercel) conhece RF_INTERNAL_KEY.
+# `route` preserva a ordem escrita: sem ele, `respond` rodaria depois de `handle_path` (bug T-18).
+{$DOMINIO} {
+	encode gzip
+	route {
+		respond /saude 200
+
+		@semChave not header X-Internal-Key {$RF_INTERNAL_KEY}
+		respond @semChave "acesso negado" 403
+
+		handle_path /rg/* {
+			rewrite * /api{uri}
+			reverse_proxy calc-regime-geral:8080
+		}
+		handle_path /sn/* {
+			rewrite * /api{uri}
+			reverse_proxy calc-simples-nacional:8082
+		}
+		respond 404
+	}
+}

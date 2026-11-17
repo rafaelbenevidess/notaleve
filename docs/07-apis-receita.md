@@ -20,7 +20,22 @@ Depois: rebuild, rodar os fixtures, atualizar esta tabela e o CHANGELOG.
 
 ## Instância online oficial
 
-`https://piloto-cbs.tributos.gov.br/servico/calculadora-consumo/api/calculadora/...`, referenciada em `application-offline.yml` para checagem de versão (`/dados-abertos/versao`). É um **piloto sem SLA**. Fica como opção/fallback via `RF_API_URL` e como referência para o teste de comparação. Não foi testada a partir deste ambiente porque o host está bloqueado pela rede da sessão.
+`https://piloto-cbs.tributos.gov.br/servico/calculadora-consumo/api/calculadora/...`, referenciada em `application-offline.yml` para checagem de versão (`/dados-abertos/versao`). É um **piloto sem SLA**. Fica como opção/fallback via `RF_API_URL` e como referência para o teste de comparação.
+
+**Comparação executada em 2026-11-17** (`NODE_USE_ENV_PROXY=1 npx tsx scripts/comparar-piloto.mts`):
+
+| Item | Local (código público) | Piloto online |
+|---|---|---|
+| Versão do app | 1.6.1 | **1.7.0**-753903df |
+| Versão da base | V0059 (30/09/2026) | **V0073** (09/11/2026), nova tabela de cClassTrib (IT 2025.002 v1.71) |
+| Exemplo oficial do Regime Geral | — | **valores idênticos** (só difere o link de documentação do erro) |
+| Camiseta em 2026 (alíquotas de referência) | — | **idêntico** |
+| NCM 61091000 | — | **idêntico** |
+| Calculadora do Simples Nacional | disponível (8082) | **não publicada** (`/observabilidade/simples-nacional` → 404) |
+
+Conclusões:
+1. O código aberto está atrás da versão que a Receita roda. Acompanhar novas tags e rodar a comparação a cada atualização.
+2. Para o Simples Nacional, a única opção é hospedar a calculadora nós mesmos, o que confirma o [ADR-0004](adr/0004-hospedar-calculadoras-proprias.md).
 
 ## Endpoints usados pelo NotaLeve
 

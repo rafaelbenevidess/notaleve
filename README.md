@@ -12,7 +12,7 @@ Em cada venda, o NotaLeve mostra o imposto em **dois modos lado a lado**:
 
 Os cálculos usam as **calculadoras oficiais de código aberto da Receita Federal** ([github.com/ReceitaFederal](https://github.com/ReceitaFederal), licença MIT), executadas por nós em containers. A NFC-e é emitida **direto na SEFAZ**, com o certificado A1 do lojista, sem intermediário pago.
 
-> **Status (2026-11-17): MVP completo rodando 100% local.** Jornada inteira testada de ponta a ponta (cadastro → loja → certificado → produtos → venda com comparativo → NFC-e autorizada → DANFE → cancelamento → assinatura), no desktop e no celular. A emissão real em homologação de uma SEFAZ depende de certificado A1 + CSC de um CNPJ real (ver [pendências](docs/11-pendencias.md)); localmente usamos uma SEFAZ simulada que valida assinatura e chave de verdade.
+> **Status (2026-11-17): MVP completo rodando 100% local.** Jornada inteira testada de ponta a ponta (cadastro → loja → certificado → produtos → venda com comparativo → NFC-e autorizada → DANFE → cancelamento → assinatura), no desktop e no celular. A emissão real em homologação de uma SEFAZ depende de certificado A1 + CSC de um CNPJ real (ver [pendências](docs/11-pendencias.md)) e já está a um comando de distância (`scripts/validar-homologacao.mts`); localmente usamos uma SEFAZ simulada que valida assinatura e chave de verdade. As calculadoras locais foram comparadas com a instância oficial da Receita: valores idênticos.
 
 ## O que o MVP faz
 
@@ -83,6 +83,7 @@ Se algo falhar, veja [09 – Troubleshooting](docs/09-troubleshooting.md).
 | [09 – Troubleshooting](docs/09-troubleshooting.md) | **Erros conhecidos, causas e soluções** |
 | [10 – Glossário](docs/10-glossario.md) | Siglas fiscais e técnicas |
 | [11 – Pendências](docs/11-pendencias.md) | O que depende de decisão ou ação externa |
+| [12 – Plano online](docs/12-plano-online.md) | Como colocar em produção (Vercel + Supabase + VM Oracle + Asaas + SEFAZ) |
 | [ADRs](docs/adr/README.md) | Registro de decisões |
 | [CHANGELOG](CHANGELOG.md) | Histórico de mudanças |
 

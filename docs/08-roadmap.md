@@ -7,12 +7,13 @@ Legenda: ✅ concluído · 🔄 em andamento · ⏳ pendente · ⛔ bloqueado po
 - ✅ `Dockerfile.java`, `Dockerfile.danfse` (+ WASM) e `docker-compose.yml`
 - ✅ Exemplos oficiais reproduzidos (Regime Geral e Simples Nacional)
 - ⏳ PDF de DANFSe de teste (não há XML de NFS-e de amostra; NFS-e está fora do MVP)
-- ⛔ Comparação local × instância piloto online (host bloqueado na sessão de desenvolvimento)
+- ✅ Comparação local × instância piloto: valores idênticos; piloto na 1.7.0/V0073; Simples Nacional ausente no piloto
 
-## Fase 0B — Validação externa ⛔
-- ⛔ Liberar rede: `piloto-cbs.tributos.gov.br`, `www.nfe.fazenda.gov.br`, homologação da UF piloto
-- ⛔ UF piloto + certificado A1 + CSC de homologação de um CNPJ real
-- ⛔ Conferir URLs de `src/lib/fiscal/webservices.ts` (SP e SVRS cadastradas; `conferido: false`)
+## Fase 0B — Validação externa 🔄
+- ✅ Rede liberada (ambiente "notaleve"): piloto da Receita, Portal NF-e, homologação SP/SVRS
+- ✅ Cadeia TLS das SEFAZ diagnosticada (ICP-Brasil, T-16) e suportada (`SEFAZ_CA_FILE`)
+- ✅ `scripts/validar-homologacao.mts`: status → emissão → cancelamento numa SEFAZ real, em um comando
+- ⛔ Executar a homologação: **falta certificado A1** de um CNPJ real (P-04) e a cadeia ICP-Brasil (P-16)
 
 ## Fase 1 — Base do SaaS ✅
 - ✅ Next.js 16 + TypeScript + Tailwind 4
@@ -48,8 +49,10 @@ Legenda: ✅ concluído · 🔄 em andamento · ⏳ pendente · ⛔ bloqueado po
 - ✅ 17 testes unitários/integração (Vitest), teste SQL de RLS, E2E Playwright (desktop + celular)
 - ✅ `tsc`, `eslint` e `next build` sem erros
 
-## Plano online ⏳ (documento separado, próximo passo)
-- Vercel (gru1) + Oracle Cloud Always Free SP (calculadoras + SEFAZ via mTLS) + Supabase gerenciado + Asaas produção
+## Plano online ✅ (documento) · ⏳ (execução)
+- ✅ [12-plano-online.md](12-plano-online.md): topologia, custos, passo a passo, checklist de go-live, operação
+- ✅ `infra/producao/` (Compose + Caddy com chave interna, testado), `vercel.json` (gru1), CI e workflow de imagens multi-arch
+- ⏳ Executar: contas Vercel Pro, Supabase, Oracle, Asaas, domínio
 
 ## Fase 6 — Ponte nacional + API pública ⏳
 - Autorizadores de todas as UFs/SVRS/SVAN, contingência, monitor SEFAZ, monitor de novas NTs, API para terceiros

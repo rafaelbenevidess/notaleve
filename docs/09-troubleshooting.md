@@ -59,7 +59,7 @@ Descrição de qualquer código:
 
 ## Ambiente de desenvolvimento desta sessão (cloud)
 - **T-07:** hosts `*.gov.br`, `sebrae.com.br` e `google.com` bloqueados pela política de rede da sessão. É preciso liberá-los nas configurações do ambiente. Não afeta a máquina local do desenvolvedor.
-- **T-08:** não é possível criar repositórios GitHub a partir da sessão. O repositório privado deve ser criado pelo dono da conta e então vinculado.
+- **T-08:** a sessão não consegue criar repositórios nem alterar configurações (ex.: visibilidade) no GitHub. Essas ações são feitas pelo dono da conta na interface do GitHub.
 
 ## Como reportar um bug
 Abra uma issue com o modelo `.github/ISSUE_TEMPLATE/bug.md`. Para bugs de cálculo, anexe o `request`/`response` do registro em `calculos` e a versão do motor (`motor`). Para bugs de emissão, anexe `c_stat`, `x_motivo` e o XML de `nota_eventos`, **sem** dados do certificado.

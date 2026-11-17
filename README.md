@@ -76,4 +76,4 @@ notaleve/
 
 ## Licenças
 
-O código do NotaLeve é proprietário (repositório privado). Os submódulos em `infra/receita/vendor/` pertencem à Receita Federal do Brasil, sob licença MIT. Eles são usados sem modificação.
+O código do NotaLeve é proprietário. O repositório é público para consulta, mas, sem arquivo de licença, todos os direitos ficam reservados ao autor. Os submódulos em `infra/receita/vendor/` pertencem à Receita Federal do Brasil, sob licença MIT. Eles são usados sem modificação.

@@ -2,7 +2,7 @@
 
 | ID | Pendência | Responsável | Bloqueia |
 |---|---|---|---|
-| P-01 | Criar repositório privado `notaleve` no GitHub e vincular à sessão | Dono da conta | Versionamento remoto |
+| P-01 | ~~Criar repositório `notaleve` no GitHub~~ ✅ criado (público por decisão do dono, 2026-11-17) | Dono da conta | — |
 | P-02 | Liberar rede: `piloto-cbs.tributos.gov.br`, `www.nfe.fazenda.gov.br`, homologação da UF piloto (e `sebrae.com.br` se houver nova pesquisa) | Dono da conta | Fase 0B, 4 |
 | P-03 | Escolher a **UF piloto** | Produto | Fase 4 |
 | P-04 | Certificado A1 de teste + CSC de homologação de um CNPJ real | Produto | Fase 4 |

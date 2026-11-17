@@ -1,0 +1,29 @@
+# syntax=docker/dockerfile:1.7
+#
+# Equivalente ao Dockerfile oficial de calculadora-rtc-gerador-danfse, com suporte
+# opcional a uma CA extra (redes com proxy TLS):  --secret id=ca,src=ca.crt
+# Contexto de build: infra/receita
+
+FROM golang:1.27.1 AS builder
+RUN --mount=type=secret,id=ca,required=false \
+    if [ -s /run/secrets/ca ]; then cp /run/secrets/ca /usr/local/share/ca-certificates/extra-ca.crt && update-ca-certificates >/dev/null; fi
+WORKDIR /app
+COPY vendor/calculadora-rtc-gerador-danfse/go.mod vendor/calculadora-rtc-gerador-danfse/go.sum ./
+RUN go mod download
+COPY vendor/calculadora-rtc-gerador-danfse/ ./
+RUN go install github.com/swaggo/swag/cmd/swag@v1.16.6 && /go/bin/swag init -g cmd/danfse/main.go -o ./api/swagger
+RUN CGO_ENABLED=0 GOOS=linux go build -ldflags="-s -w" -o /danfse-service ./cmd/danfse
+# Build WASM (usado pelo front-end para gerar o PDF no navegador)
+RUN GOOS=js GOARCH=wasm CGO_ENABLED=0 go build -ldflags="-s -w" -o /wasm/danfse.wasm ./cmd/danfse-wasm && \
+    cp "$(go env GOROOT)/lib/wasm/wasm_exec.js" /wasm/ 2>/dev/null || cp "$(go env GOROOT)/misc/wasm/wasm_exec.js" /wasm/
+
+# Artefatos WASM exportáveis:  docker build --target wasm -o out/ ...
+FROM scratch AS wasm
+COPY --from=builder /wasm/ /
+
+FROM gcr.io/distroless/static-debian12:nonroot AS runtime
+ENV TZ=America/Sao_Paulo
+COPY --from=builder /usr/share/zoneinfo /usr/share/zoneinfo
+COPY --from=builder /danfse-service /app/danfse-service
+EXPOSE 8080
+ENTRYPOINT ["/app/danfse-service"]

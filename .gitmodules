@@ -1,0 +1,9 @@
+[submodule "infra/receita/vendor/calculadora-rtc-regime-regular"]
+	path = infra/receita/vendor/calculadora-rtc-regime-regular
+	url = https://github.com/ReceitaFederal/calculadora-rtc-regime-regular.git
+[submodule "infra/receita/vendor/calculadora-rtc-simples-nacional"]
+	path = infra/receita/vendor/calculadora-rtc-simples-nacional
+	url = https://github.com/ReceitaFederal/calculadora-rtc-simples-nacional.git
+[submodule "infra/receita/vendor/calculadora-rtc-gerador-danfse"]
+	path = infra/receita/vendor/calculadora-rtc-gerador-danfse
+	url = https://github.com/ReceitaFederal/calculadora-rtc-gerador-danfse.git

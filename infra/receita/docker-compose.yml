@@ -1,0 +1,45 @@
+# APIs oficiais da Receita Federal rodando localmente.
+#   docker compose -f infra/receita/docker-compose.yml up -d --build
+#
+# Regime Geral:      http://localhost:8080/api  (Swagger: /api/swagger-ui.html)
+# Simples Nacional:  http://localhost:8082/api  (Swagger: /api/swagger-ui.html)
+# DANFSe (Go):       http://localhost:8081/api/danfse  (Swagger: /api/swagger-ui)
+
+name: notaleve-receita
+
+services:
+  calc-regime-geral:
+    build:
+      context: .
+      dockerfile: Dockerfile.java
+      target: regime-geral
+      args:
+        JAVA_TOOL_OPTIONS: ${BUILD_JAVA_TOOL_OPTIONS:-}
+    image: notaleve/calc-regime-geral:1.6.1
+    ports: ["8080:8080"]
+    mem_limit: 1g
+    restart: unless-stopped
+
+  calc-simples-nacional:
+    build:
+      context: .
+      dockerfile: Dockerfile.java
+      target: simples-nacional
+      args:
+        JAVA_TOOL_OPTIONS: ${BUILD_JAVA_TOOL_OPTIONS:-}
+    image: notaleve/calc-simples-nacional:0.0.6
+    ports: ["8082:8082"]
+    mem_limit: 1g
+    restart: unless-stopped
+
+  danfse:
+    build:
+      context: .
+      dockerfile: Dockerfile.danfse
+      target: runtime
+    image: notaleve/danfse:1.0.0
+    environment:
+      SERVER_PORT: "8080"
+    ports: ["8081:8080"]
+    mem_limit: 256m
+    restart: unless-stopped

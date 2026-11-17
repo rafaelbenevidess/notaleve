@@ -1,0 +1,15 @@
+node_modules/
+.next/
+.env
+.env.*
+!.env.example
+*.pfx
+*.p12
+*.pem
+*.key
+infra/receita/out/
+supabase/.temp/
+.DS_Store
+coverage/
+playwright-report/
+test-results/

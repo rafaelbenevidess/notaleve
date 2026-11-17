@@ -59,6 +59,13 @@ export interface ResultadoCalculo {
   response?: unknown
 }
 
+export interface ComparativoVenda {
+  hoje: ResultadoCalculo
+  reforma: ResultadoCalculo
+  diferenca: number
+  diferencaPct: number
+}
+
 export const zeroTributos = (): TributosItem => ({ cbs: 0, ibsUf: 0, ibsMun: 0, is: 0, icms: 0, pisCofins: 0, outros: 0 })
 
 export const r2 = (n: number) => Math.round((n + Number.EPSILON) * 100) / 100

@@ -2,8 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  // Cache Components desligado: toda a área logada depende da sessão (ver docs/adr/0011).
+  cacheComponents: false,
   turbopack: {
     rules: {
       "*.css": {

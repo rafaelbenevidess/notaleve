@@ -57,6 +57,51 @@ Descrição de qualquer código:
 - Regime Geral: `GET /api/calculadora/observabilidade/erros?codigo=REG-011`
 - Simples Nacional: `GET /api/calculadora/observabilidade/simples-nacional/erros?codigo=VSN-001`
 
+## Aplicação (encontrados durante o desenvolvimento do MVP)
+
+### T-09 — Cliente conseguia chamar função restrita do Postgres (`reservar_numero_nfce`)
+- **Causa:** no Postgres, toda função recebe `EXECUTE` para `PUBLIC` por padrão; `revoke ... from anon, authenticated` não basta.
+- **Solução:** `revoke execute ... from public, anon, authenticated` e `grant execute ... to service_role`. Coberto por `supabase/tests/rls_isolamento.sql`.
+
+### T-10 — `cStat` vinha `null` na resposta da SEFAZ
+- **Causa:** o trecho `<protNFe>` extraído da resposta perde o `xmlns` herdado do pai, e a busca por namespace (`getElementsByTagNameNS`) não o encontrava.
+- **Solução:** `src/lib/fiscal/sefaz.ts` lê os campos pelo nome local, ignorando prefixo e namespace.
+
+### T-11 — Next.js 16: "encountered runtime data / Date.now() during prerendering"
+- **Causa:** o scaffold liga `cacheComponents`, que pré-renderiza rotas; a área logada lê cookies e o relógio.
+- **Solução:** `cacheComponents: false` ([ADR-0011](adr/0011-desligar-cache-components.md)). Depois de mudar o `next.config.ts`, reinicie o `next dev`.
+
+### T-12 — `tsx`: "Top-level await is currently not supported with the cjs output format"
+- **Causa:** script `.ts` com `await` no topo num projeto CommonJS.
+- **Solução:** usar a extensão `.mts` (ex.: `scripts/simular-webhook-asaas.mts`).
+
+### T-13 — SEFAZ simulada devolve 539 (duplicidade) em testes repetidos
+- **Causa:** o mock guarda as notas autorizadas em memória; reusar o mesmo número com outra chave é duplicidade, como na SEFAZ real.
+- **Solução:** os testes usam numeração única por execução. Para zerar o estado, reinicie `npm run sefaz:mock`.
+
+### T-14 — Mensagem de sucesso "some" após cancelar a NFC-e
+- **Causa:** ao revalidar a página, o formulário de cancelamento deixa de existir (a nota não está mais autorizada).
+- **Solução:** o cartão da nota cancelada mostra o aviso permanente "NFC-e nº X cancelada na SEFAZ".
+
+### T-15 — Venda salva, mas NFC-e não emitida
+- **Sintoma:** aviso amarelo "Venda salva, mas a NFC-e não foi emitida: …" na página da venda.
+- **Causas comuns:** certificado ou CSC não cadastrados; certificado vencido; calculadora da Receita fora do ar (regime normal precisa do grupo IBSCBS oficial); SEFAZ indisponível.
+- **Solução:** corrigir a causa indicada e clicar em **Emitir NFC-e** na página da venda. Notas sem resposta ficam com status `enviada` para conciliação.
+
+## Rejeições da SEFAZ tratadas
+
+| cStat | Significado | Onde aparece |
+|---|---|---|
+| 100 | Autorizado o uso | Nota autorizada |
+| 135 | Evento (cancelamento) registrado | Nota cancelada |
+| 102 | Inutilização homologada | Tela Notas |
+| 204 / 539 | Duplicidade (mesma chave / mesmo número com outra chave) | Nota rejeitada |
+| 236 | Dígito verificador da chave inválido | Nota rejeitada |
+| 297 | Assinatura difere do calculado (XML alterado após assinar) | Nota rejeitada |
+| 373 | 1º item sem o texto obrigatório de homologação | Nota rejeitada |
+
+Os XMLs enviados e recebidos de cada tentativa ficam em `nota_eventos` para análise.
+
 ## Ambiente de desenvolvimento desta sessão (cloud)
 - **T-07:** hosts `*.gov.br`, `sebrae.com.br` e `google.com` bloqueados pela política de rede da sessão. É preciso liberá-los nas configurações do ambiente. Não afeta a máquina local do desenvolvedor.
 - **T-08:** a sessão não consegue criar repositórios nem alterar configurações (ex.: visibilidade) no GitHub. Essas ações são feitas pelo dono da conta na interface do GitHub.

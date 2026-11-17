@@ -12,5 +12,7 @@
 | P-08 | Definir premissas de alíquotas para o cenário 2033 (lacuna L-02) | Produto | Fase 3 |
 | P-09 | Preço final do plano (proposta R$ 49–79/mês) | Comercial | Lançamento |
 | P-10 | Verificar marca "NotaLeve" (INPI) e domínio | Comercial | Lançamento |
-| P-11 | Escolher a biblioteca de NF-e vs. módulo próprio (gera ADR) | Técnico | Fase 4 |
+| P-11 | ~~Biblioteca de NF-e vs. módulo próprio~~ ✅ módulo próprio (`src/lib/fiscal`, com xml-crypto + node-forge), validado no XSD oficial | Técnico | — |
 | P-12 | Plano "online" (Vercel + Oracle SP + Supabase gerenciado) | Técnico | Produção |
+| P-13 | Revisão jurídica do rascunho de termos/privacidade em `/termos` | Jurídico | Lançamento |
+| P-14 | Conta Asaas (sandbox → produção), `ASAAS_API_KEY` e token do webhook | Comercial | Cobrança real |

@@ -16,3 +16,4 @@ test-results/
 next-env.d.ts
 *.tsbuildinfo
 supabase/.branches/
+.sefaz-mock.log

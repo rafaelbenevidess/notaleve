@@ -8,8 +8,8 @@ Lojista (navegador / PWA no celular)
         ▼
 Next.js (App Router, TypeScript)  ─────────────── Supabase
  ├─ UI: onboarding, produtos, PDV, notas, painel     ├─ Auth (usuários)
- ├─ /api/rf/*        proxy → calculadoras Receita    ├─ Postgres + RLS (multiempresa)
- ├─ /api/webhooks/asaas  → status da assinatura      └─ Storage privado (pfx cifrado, XMLs, PDFs)
+ ├─ /api/rf/*        consultas às tabelas oficiais   ├─ Postgres + RLS (multiempresa)
+ ├─ /api/webhooks/asaas  → status da assinatura      └─ segredos cifrados + XMLs (ADR-0012)
  ├─ lib/tributos     motor dual (hoje × 2033)
  ├─ lib/fiscal/nfce  XML → assinatura A1 → SOAP mTLS → SEFAZ
  └─ lib/cripto       cifra/decifra certificado e CSC
@@ -26,8 +26,8 @@ Next.js (App Router, TypeScript)  ─────────────── 
 
 | Componente | Tecnologia | Responsabilidade |
 |---|---|---|
-| App web | Next.js + TypeScript + Tailwind + shadcn/ui | Telas, rotas de API, orquestração |
-| Banco/Auth/Storage | Supabase (Postgres 15+, RLS) | Dados multiempresa, usuários, arquivos |
+| App web | Next.js 16 + TypeScript + Tailwind 4 (componentes próprios em `src/components/ui.tsx`; Cache Components desligado — ADR-0011) | Telas, Server Actions, rotas de API, orquestração |
+| Banco/Auth | Supabase (Postgres, RLS) | Dados multiempresa, usuários, segredos cifrados e XMLs |
 | Calculadora Regime Geral | Java 21 / Spring Boot (código oficial da Receita, v1.6.1) | CBS/IBS/IS, dados abertos, base de cálculo, XML do grupo |
 | Calculadora Simples Nacional | Java 21 / Spring Boot (oficial, v0.0.6) | CBS/IBS do optante, atividades do SN |
 | Gerador DANFSe | Go (oficial, v1.0.0), HTTP e WASM | PDF de NFS-e (uso futuro) |
@@ -52,8 +52,10 @@ Next.js (App Router, TypeScript)  ─────────────── 
 | DANFSe | idem | 8081 |
 | Supabase | `supabase start` (CLI, usa Docker) | 54321 (API) / 54322 (DB) |
 | App | `npm run dev` | 3000 |
-| Asaas | sandbox (externo) ou `scripts/simular-webhook-asaas.ts` | — |
-| SEFAZ | `infra/sefaz-mock` para desenvolvimento; homologação real da UF piloto para validação | 8090 |
+| Asaas | sandbox (externo) ou `scripts/simular-webhook-asaas.mts` | — |
+| SEFAZ | `npm run sefaz:mock` (`infra/sefaz-mock`, `SEFAZ_MODO=mock`); homologação real com `SEFAZ_MODO=real` | 8090 |
+
+Tudo de uma vez: `npm run local` (`scripts/subir-local.sh`).
 
 Variável `RF_API_URL`: aponta para `http://localhost:8080/api` (padrão) **ou** para a instância online oficial `https://piloto-cbs.tributos.gov.br/servico/calculadora-consumo/api`. Um teste de comparação roda o mesmo exemplo nas duas para validar o container (ver [ADR-0004](adr/0004-hospedar-calculadoras-proprias.md)).
 

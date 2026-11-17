@@ -14,5 +14,7 @@ Formato: contexto → decisão → alternativas → consequências. Uma decisão
 | [0008](0008-autorizador-ponte-nacional.md) | Interface Autorizador / ponte nacional | aceito |
 | [0009](0009-dockerfiles-proprios-ca-opcional.md) | Dockerfiles próprios com CA opcional | aceito |
 | [0010](0010-nome-notaleve.md) | Nome NotaLeve | provisório |
+| [0011](0011-desligar-cache-components.md) | Desligar Cache Components do Next 16 | aceito |
+| [0012](0012-segredos-e-xml-no-postgres.md) | Certificado, CSC e XMLs no Postgres (cifrados) | aceito |
 
 Modelo para novos ADRs: copie qualquer arquivo e use o próximo número.

@@ -43,7 +43,17 @@ Sempre usar os endpoints de **observabilidade**: eles devolvem erro por item (`e
 | L-04 | O modo 2033 ignora efeitos de crédito (não cumulatividade) na cadeia | O comparativo é do imposto destacado na venda, não do custo líquido | Deixar explícito na UI. Estudar módulo de crédito na fase 5+ |
 | L-05 | MEI fora do escopo da calculadora do SN | | Mensagem explicativa; avaliar regra própria |
 
-## Contrato interno (proposta)
+## Implementação
+
+| Arquivo | Papel |
+|---|---|
+| `src/lib/tributos/simples.ts` | Anexo I: faixa, alíquota efetiva, partilha; premissa PIS+COFINS → CBS e ICMS → IBS (L-01) |
+| `src/lib/tributos/cenarios.ts` | Premissas versionadas: alíquotas 2033 (CBS 8,8%, IBS UF 14,6%, IBS Mun 3,1%), ICMS interno por UF, PIS/COFINS cumulativo, teste 2026 |
+| `src/lib/tributos/calcular-hoje.ts` | Modo hoje (função pura) |
+| `src/lib/tributos/calcular-2033.ts` | Modo 2033 via calculadoras oficiais |
+| `src/lib/fiscal/nfce/ibscbs.ts` | Grupo `<IBSCBS>` da nota gerado pela própria Receita (`/regime-geral` + `/xml/generate`) |
+
+## Contrato interno
 
 ```ts
 type ResultadoCalculo = {

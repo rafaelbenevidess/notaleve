@@ -4,6 +4,22 @@ Formato baseado em [Keep a Changelog](https://keepachangelog.com/pt-BR/1.1.0/).
 
 ## [Não lançado]
 
+## [0.1.0] — 2026-11-17 — MVP local
+
+### Adicionado
+- App Next.js 16: landing, cadastro/login, onboarding, configurações (certificado A1, CSC), produtos (+CSV), PDV, vendas, notas, painel, assinatura.
+- Supabase: esquema multiempresa com RLS, privilégios por coluna para segredos, auditoria; teste SQL de isolamento.
+- Motor tributário dual: modo hoje (Simples Anexo I, regime normal, MEI) e modo 2033 (calculadoras oficiais da Receita), com premissas na UI.
+- NFC-e: XML 4.00 + grupo IBSCBS oficial, validação no XSD oficial, XMLDSig, QR Code v2, autorização, cancelamento, inutilização, DANFE 80 mm, exportação de XMLs.
+- SEFAZ simulada (`infra/sefaz-mock`) e gerador de certificado A1 de teste.
+- Asaas: assinatura, webhook com token, modo simulado e script de simulação.
+- Testes: Vitest (17), RLS (SQL), Playwright E2E desktop + celular. `npm run local` sobe tudo.
+- ADRs 0011 (Cache Components desligado) e 0012 (segredos/XML no Postgres).
+
+### Corrigido
+- T-09 a T-15 (ver docs/09-troubleshooting.md).
+
+
 ### Adicionado — 2026-11-17
 - Repositório inicial do NotaLeve e documentação completa (`docs/`, ADRs 0001–0010).
 - Submódulos das calculadoras oficiais da Receita Federal: Regime Geral 1.6.1, Simples Nacional 0.0.6, DANFSe 1.0.0.

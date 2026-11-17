@@ -1,6 +1,8 @@
 # 04 – Modelo de dados (Supabase / Postgres)
 
-> Proposta inicial. As migrações reais ficarão em `supabase/migrations/`. Toda tabela com `empresa_id` tem RLS.
+> Implementado em `supabase/migrations/20261117000001_esquema_inicial.sql`; tipos gerados em `src/lib/supabase/database.types.ts` (`npm run db:tipos`). Toda tabela com `empresa_id` tem RLS. Segredos (cifrados) e XMLs ficam no Postgres ([ADR-0012](adr/0012-segredos-e-xml-no-postgres.md)).
+>
+> Funções: `criar_empresa()` (empresa + dono + trial, atômico), `reservar_numero_nfce()` (só servidor), `empresa_pode_operar()`, `minhas_empresas()`; trigger de número sequencial de venda por empresa; tabela `auditoria` registra todo uso do certificado.
 
 ```
 auth.users ─┐
